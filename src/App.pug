@@ -1,0 +1,58 @@
+script.
+    // App.pug
+    import MjComponent from "./MjPromptComponent.pug"
+    
+    let views = ["view1"]
+    var currentView = views[0]
+
+    const setView = (viewId) => currentView = viewId
+
+main
+    nav.navbar.navbar-inverse.navbar-fixed-top
+        .container
+            .navbar-header
+                button(
+                    type="button"
+                    class="navbar-toggle collapsed"
+                    data-toggle="collapse"
+                    data-target="#navbar"
+                    aria-expanded="false"
+                    aria-controls="navbar"
+                )
+                    span.sr-only Toggle Navigation
+                    span.icon-bar
+                    span.icon-bar
+                    span.icon-bar
+                a(
+                    class="navbar-brand"
+                ) MJ Prompt Helper
+                    small v0.1
+
+            #navbar.collapse.navbar-collapse
+                ul.nav.navbar-nav
+                    li( class="{ currentView == 'view1' ? 'active' : ''}")
+                        a(href="#" "on:click|preventDefault"="{ setView.bind(this,'view1') }") Home
+
+    .container
+        .starter-template
+            div(class="view-{currentView != 'view1' ? 'hidden' : 'block'}")
+                MjComponent
+
+    footer.footer Made with &#9829; and :)s
+style.
+    .navbar-brand small {
+        font-size: 0.5em;
+        margin-left: 5px;
+    }
+
+    footer.footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    .view-hidden {
+        display: none;
+    }

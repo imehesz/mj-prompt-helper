@@ -1,0 +1,64 @@
+script.
+    // TestComponent.pug
+    let h1Text = "MJ Prompt Helper"
+    let preText = "askjasdk aksdj aksdjkajs d"
+
+section.mj-component
+    h1 {h1Text}
+
+    fieldset 
+        legend Prompt
+        textarea
+    
+    fieldset 
+        legend Style
+        input(type="text")
+
+    fieldset
+        legend Background
+
+        ul(class="flexy")
+            li
+                input(type="radio" name="bg-color" id="bg-default")
+                label(for="bg-default") Default
+            li
+                input(type="radio" name="bg-color" id="bg-white")
+                label(for="bg-white") White
+            li 
+                input(type="radio" name="bg-color" id="bg-black")
+                label(for="bg-black") Black 
+            li
+                input(type="radio" name="bg-color" id="bg-green")
+                label(for="bg-green") Green 
+
+    button.btn.btn-primary Generate Prompt 
+
+    hr
+
+    pre {preText}
+style.
+    .mj-component {}
+
+    .mj-component textarea,
+    .mj-component input[type="text"]{
+        width: 100%;
+    }
+
+    .mj-component label {
+        display: inline-block;
+        cursor: pointer;
+        margin-left: 5px;
+    }
+
+    .mj-component .flexy {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .mj-component .flexy li {
+        flex: 1;
+    }
