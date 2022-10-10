@@ -47,8 +47,9 @@ script.
         prompts = prompts
     }
 
-    const updatePromptText = (e) => promptText = e.target.value
-    const updateStyleText = (e) => styleText = e.target.value
+    const updatePromptText = e => promptText = e.target.value
+    const updateStyleText = e => styleText = e.target.value
+    const copyPrompt = val => navigator.clipboard.writeText(val)
 
     const init = () => {
         // if you see something, say something
@@ -125,6 +126,7 @@ section.mj-component
       {#each prompts as prompt}
         li 
             pre {prompt}
+                button("class"="copy", "on:click"="{function(){copyPrompt(prompt)}}") Copy
 style.
     .mj-component {}
 
@@ -132,6 +134,12 @@ style.
     .mj-component button,
     .mj-component input[type="text"]{
         width: 100%;
+    }
+
+    .mj-component button.copy {
+        width: unset;
+        float: right;
+        margin-bottom: 0;
     }
 
     .mj-component label {
