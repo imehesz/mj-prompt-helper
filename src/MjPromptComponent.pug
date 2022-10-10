@@ -2,6 +2,7 @@ script.
     // TestComponent.pug
     let h1Text = "MJ Prompt Helper"
     let preText = "askjasdk aksdj aksdjkajs d"
+    let storageId = "MHX_MJ_PROMPTS"
     
     let prompts = []
     let promptGenerated = false
@@ -34,7 +35,6 @@ script.
 
         let ars = document.getElementsByName("ar")
         for(let i=0; i<ars.length; i++) {
-            console.log(ars[i].checked)
             if( ars[i].checked ) {
                 prompts.unshift(outputStr + ` --ar ${ars[i].value}` )
                 promptGenerated = true
@@ -43,11 +43,23 @@ script.
 
         if(!promptGenerated) prompts.unshift(outputStr)
 
+        window.localStorage.setItem(storageId, JSON.stringify(prompts))
         prompts = prompts
     }
 
     const updatePromptText = (e) => promptText = e.target.value
     const updateStyleText = (e) => styleText = e.target.value
+
+    const init = () => {
+        // if you see something, say something
+        let promptHistory = window.localStorage.getItem(storageId)
+
+        if( promptHistory ) prompts = JSON.parse(window.localStorage.getItem(storageId))
+
+        prompts = prompts.splice(0,100)
+    }
+
+    init()
 
 
 section.mj-component
@@ -105,7 +117,7 @@ section.mj-component
     fieldset 
         legend Action
         
-        button.btn.btn-primary("on:click"="{generatePrompts}") Generate Prompt 
+        button.btn.btn-primary("on:click"="{generatePrompts}", "disabled"="{!promptText}") Generate Prompt 
 
     hr
 
