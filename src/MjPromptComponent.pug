@@ -2,44 +2,122 @@ script.
     // TestComponent.pug
     let h1Text = "MJ Prompt Helper"
     let preText = "askjasdk aksdj aksdjkajs d"
+    
+    let prompts = []
+    let promptGenerated = false
+
+    let promptText = ""
+    let styleText = ""
+    let background = ""
+
+    const generatePrompts = () => {
+        promptGenerated = false
+        let outputStr = `/imagine prompt: ${promptText}, ${styleText}`
+
+        let radios = document.getElementsByName('bg-color');
+
+        for (let i = 0, length = radios.length; i < length; i++) {
+            if (radios[i].checked) {
+                // do whatever you want with the checked radio
+                if(radios[i].value != "default") {
+                    background = radios[i].value
+                } else {
+                    background = ""
+                }
+
+                // only one radio can be logically checked, don't check the rest
+                break;
+            }
+        }
+
+        outputStr += background ? `, ${background} background` : ""
+
+        let ars = document.getElementsByName("ar")
+        for(let i=0; i<ars.length; i++) {
+            console.log(ars[i].checked)
+            if( ars[i].checked ) {
+                prompts.unshift(outputStr + ` --ar ${ars[i].value}` )
+                promptGenerated = true
+            }
+        }
+
+        if(!promptGenerated) prompts.unshift(outputStr)
+
+        prompts = prompts
+    }
+
+    const updatePromptText = (e) => promptText = e.target.value
+    const updateStyleText = (e) => styleText = e.target.value
+
 
 section.mj-component
     h1 {h1Text}
 
     fieldset 
         legend Prompt
-        textarea
+        textarea(id="prompt-text", "on:change"="{updatePromptText}")
     
     fieldset 
         legend Style
-        input(type="text")
+        input(type="text", "on:change"="{updateStyleText}")
 
     fieldset
         legend Background
 
         ul(class="flexy")
             li
-                input(type="radio" name="bg-color" id="bg-default")
+                input(type="radio" name="bg-color" value="default" id="bg-default" checked="true")
                 label(for="bg-default") Default
             li
-                input(type="radio" name="bg-color" id="bg-white")
+                input(type="radio" name="bg-color" value="white" id="bg-white")
                 label(for="bg-white") White
             li 
-                input(type="radio" name="bg-color" id="bg-black")
+                input(type="radio" name="bg-color" value="black" id="bg-black")
                 label(for="bg-black") Black 
             li
-                input(type="radio" name="bg-color" id="bg-green")
+                input(type="radio" name="bg-color" value="green" id="bg-green")
                 label(for="bg-green") Green 
 
-    button.btn.btn-primary Generate Prompt 
+    fieldset 
+        legend Aspect Ratio(s)
+
+        ul(class="flexy")
+            li
+                input(type="checkbox" name="ar" id="ar-1x1" value="1:1")
+                label(for="ar-1x1") 1:1
+
+            li
+                input(type="checkbox" name="ar" id="ar-3x2" value="3:2")
+                label(for="ar-3x2") 3:2
+
+            li
+                input(type="checkbox" name="ar" id="ar-2x3" value="2:3")
+                label(for="ar-2x3") 2:3
+            
+            li
+                input(type="checkbox" name="ar" id="ar-16x9" value="16:9")
+                label(for="ar-16x9") 16:9
+
+            li
+                input(type="checkbox" name="ar" id="ar-9x16" value="9:16")
+                label(for="ar-9x16") 9:16
+
+    fieldset 
+        legend Action
+        
+        button.btn.btn-primary("on:click"="{generatePrompts}") Generate Prompt 
 
     hr
 
-    pre {preText}
+    ul(class="prompts")
+      {#each prompts as prompt}
+        li 
+            pre {prompt}
 style.
     .mj-component {}
 
     .mj-component textarea,
+    .mj-component button,
     .mj-component input[type="text"]{
         width: 100%;
     }
@@ -61,4 +139,16 @@ style.
 
     .mj-component .flexy li {
         flex: 1;
+    }
+
+    .mj-component ul.prompts {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    @media only screen and (min-width: 600px) {
+        .mj-component .flexy {
+            flex-direction: row;
+        }
     }
